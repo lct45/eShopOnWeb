@@ -22,6 +22,16 @@ Mostly. But pretty much exclusively for non-maintainers. You'll need to fork the
 5. Make sure your code lints.
 6. Issue that pull request!
 
+### Next.js migration PRs (LCFM)
+
+Migration work is tracked in the [LCFM Jira project](https://fe-anysphere-demo.atlassian.net/browse/LCFM-1). For those PRs:
+
+1. Use the GitHub pull request template (`.github/pull_request_template.md`).
+2. Link the `LCFM-*` ticket and name the stage from `docs/migration-stage-gates.md`. The ticket map is in `docs/dotnet-to-nextjs-migration.md`.
+3. Land tests in the same PR as the behavior change.
+4. Expect Cursor Bugbot to review the diff against `.cursor/BUGBOT.md` (and nested rules under `domain/`, `data/`, and `auth/`). Bugbot does not run the test suite; CI does.
+
+
 - [Pull Request Check List](https://ardalis.com/github-pull-request-checklist/)
 - [Resync your fork with this upstream repo](https://ardalis.com/syncing-a-fork-of-a-github-repository-with-upstream/)
 
