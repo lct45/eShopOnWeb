@@ -260,3 +260,9 @@ pub/
 .devcontainer
 
 .azure
+
+# Next.js migration scaffold (src/Web.Next)
+**/node_modules/
+**/.next/
+**/coverage/
+*.tsbuildinfo
