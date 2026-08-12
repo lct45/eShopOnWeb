@@ -2,6 +2,8 @@
 
 Use these gates to decide whether an LCFM ticket is actually done. Implementation without the listed evidence is not done.
 
+Migration plan and ticket map: [dotnet-to-nextjs-migration.md](./dotnet-to-nextjs-migration.md)
+
 Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests fail.
 
 ## How to use this on a PR

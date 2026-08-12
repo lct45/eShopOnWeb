@@ -1,7 +1,7 @@
 ## LCFM ticket
 
 - Ticket: LCFM-
-- Stage gate (see `docs/migration-stage-gates.md`):
+- Stage gate (see `docs/migration-stage-gates.md` and `docs/dotnet-to-nextjs-migration.md`):
 - Blocks / unblocks:
 
 ## Summary
