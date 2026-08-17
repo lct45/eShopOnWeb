@@ -189,17 +189,23 @@ If you want to help maintain [the documentation](https://nimblepros.github.io/eS
 
 ## Running the sample using Docker
 
-You can run the Web sample by running these commands from the root folder (where the .sln file is located):
+### Next.js + SQL Server (migration stack — LCFM-26)
 
+```bash
+cp .env.example .env   # set MSSQL_SA_PASSWORD; keep connection-string passwords in sync
+docker compose up --build -d
+curl -sS http://localhost:3000/api/health
 ```
-docker-compose build
-docker-compose up
-```
 
-You should be able to make requests to localhost:5106 for the Web project, and localhost:5200 for the Public API project once these commands complete. If you have any problems, especially with login, try from a new guest or incognito browser instance.
+Full clean-start, seed, and troubleshooting steps:
+[docs/docker-local-nextjs.md](docs/docker-local-nextjs.md).
 
-You can also run the applications by using the instructions located in their `Dockerfile` file in the root of each project. Again, run these commands from the root of the solution (where the .sln file is located).
+### Legacy .NET containers
 
+The previous `eshopwebmvc` / `eshoppublicapi` compose services were replaced by
+`web-next`. The .NET Dockerfiles under `src/Web` and `src/PublicApi` remain until
+follow-up cleanup tickets remove them; you can still build those images directly
+with `docker build` if needed.
 ## Getting the GitHub Single Sign-On Working
 
 We include GitHub as our external provider for single sign-on.

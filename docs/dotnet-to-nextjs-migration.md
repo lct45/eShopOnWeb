@@ -89,7 +89,7 @@ Original plan IDs are listed only as a crosswalk. Work from the LCFM keys.
 | Plan ID | Ticket | Summary |
 | --- | --- | --- |
 | X3 CI | [LCFM-25](https://fe-anysphere-demo.atlassian.net/browse/LCFM-25) | Next.js CI build and quality gates |
-| X3 docker | [LCFM-26](https://fe-anysphere-demo.atlassian.net/browse/LCFM-26) | Next.js container and SQL Server compose |
+| X3 docker | [LCFM-26](https://fe-anysphere-demo.atlassian.net/browse/LCFM-26) | Next.js container and SQL Server compose — see [docker-local-nextjs.md](./docker-local-nextjs.md) |
 | X3 azure | [LCFM-27](https://fe-anysphere-demo.atlassian.net/browse/LCFM-27) | Azure deployment for Next.js + SQL Server |
 | X2 | [LCFM-28](https://fe-anysphere-demo.atlassian.net/browse/LCFM-28) | Playwright parity suite |
 | X3 o11y | [LCFM-29](https://fe-anysphere-demo.atlassian.net/browse/LCFM-29) | Health checks, logging, and telemetry |
