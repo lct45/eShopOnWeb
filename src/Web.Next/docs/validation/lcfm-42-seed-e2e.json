@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "ticket": "LCFM-42",
+  "path": "seedWithStore → verifySeededStore",
+  "first": {
+    "brands": 5,
+    "types": 4,
+    "items": 12,
+    "roles": 2,
+    "users": 3,
+    "userRoles": 2,
+    "baskets": 0,
+    "orders": 0,
+    "reset": true
+  },
+  "second": {
+    "brands": 5,
+    "types": 4,
+    "items": 12,
+    "roles": 2,
+    "users": 3,
+    "userRoles": 2,
+    "baskets": 0,
+    "orders": 0,
+    "reset": true
+  },
+  "spotChecks": {
+    "catalogItem1": {
+      "id": 1,
+      "name": ".NET Bot Black Sweatshirt",
+      "price": 19.5,
+      "catalogTypeId": 2,
+      "catalogBrandId": 2
+    },
+    "demouser": {
+      "userName": "demouser@microsoft.com",
+      "roles": []
+    }
+  }
+}

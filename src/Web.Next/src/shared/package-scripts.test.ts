@@ -13,5 +13,11 @@ describe("package scripts", () => {
     expect(packageJson.scripts.typecheck).toBe("tsc --noEmit");
     expect(packageJson.scripts.lint).toBe("eslint .");
     expect(packageJson.scripts["format:check"]).toBe("prettier --check .");
+    expect(packageJson.scripts["db:seed"]).toBe(
+      "tsx src/data/seed/cli.ts seed",
+    );
+    expect(packageJson.scripts["db:reset"]).toBe(
+      "tsx src/data/seed/cli.ts reset",
+    );
   });
 });

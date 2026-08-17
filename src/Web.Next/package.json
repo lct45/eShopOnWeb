@@ -12,14 +12,18 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "db:seed": "tsx src/data/seed/cli.ts seed",
+    "db:reset": "tsx src/data/seed/cli.ts reset",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build"
   },
   "dependencies": {
+    "mssql": "^11.0.1",
     "next": "16.3.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@types/mssql": "^9.1.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -27,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
