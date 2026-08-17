@@ -17,5 +17,10 @@ describe("package scripts", () => {
     expect(packageJson.scripts.lint).toBe("eslint . --max-warnings 0");
     expect(packageJson.scripts["format:check"]).toBe("prettier --check .");
     expect(packageJson.scripts["verify:ci"]).toContain("test:ci");
+    expect(packageJson.scripts["db:seed"]).toBe(
+      "tsx src/data/seed/cli.ts seed",
+    );
+    expect(packageJson.scripts["db:reset"]).toBe(
+      "tsx src/data/seed/cli.ts reset",
   });
 });

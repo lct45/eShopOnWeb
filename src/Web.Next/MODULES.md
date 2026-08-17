@@ -9,9 +9,9 @@ into top-level modules under `src/`.
 | -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | `app`    | `src/app`    | Next.js App Router routes, layouts, and UI entry points                                                                      |
 | `domain` | `src/domain` | Pure business rules (catalog, basket, order)                                                                                 |
-| `data`   | `src/data`   | Persistence adapters and repository implementations                                                                          |
+| `data`   | `src/data`   | Persistence adapters, SQL Server seed, and repository implementations                                                        |
 | `auth`   | `src/auth`   | Identity, sessions, and authorization helpers                                                                                |
-| `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic (includes `contracts/` API DTOs and `authorization/` role constants) |
+| `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic (includes `contracts/` API DTOs, `authorization/` role constants, and demo fixtures) |
 
 ## Import aliases
 
@@ -52,6 +52,12 @@ Framework-independent TypeScript DTOs live under `src/shared/contracts/` and rol
 constants under `src/shared/authorization/`. They mirror PublicApi /
 BlazorShared wire shapes (camelCase JSON field names) and must not import React,
 Next.js, or database packages.
+
+## Shared seed (LCFM-42)
+
+`shared/fixtures` holds deterministic demo users/roles/catalog data.
+`data/seed` applies that data to SQL Server (`npm run db:seed` / `db:reset`).
+Repository implementations land in later tickets (LCFM-5/6/7).
 
 Later tickets fill remaining modules; foundation tickets establish contracts and
 the executable toolchain.
