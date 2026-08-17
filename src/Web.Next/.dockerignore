@@ -1,0 +1,17 @@
+node_modules
+.next
+coverage
+docs/validation
+*.md
+!README.md
+.git
+.gitignore
+.prettierignore
+prettier.config.mjs
+eslint.config.mjs
+vitest.config.mts
+**/*.test.ts
+**/*.test.tsx
+.env
+.env.*
+!.env.example

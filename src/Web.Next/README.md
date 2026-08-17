@@ -1,7 +1,9 @@
 # Next.js app for eShopOnWeb (LCFM migration)
 
 App Router foundation (LCFM-2) plus shared API contracts and authorization
-constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
+constants (LCFM-3). Container orchestration for this app is documented in
+[docs/docker-local-nextjs.md](../../docs/docker-local-nextjs.md) (LCFM-26).
+No storefront UI, auth flows, or database repositories yet.
 
 ## Scripts
 
@@ -15,6 +17,15 @@ constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
 | `npm run typecheck`               | Strict TypeScript (`tsc --noEmit`)       |
 | `npm run test`                    | Vitest unit tests                        |
 | `npm run verify`                  | typecheck + lint + format + test + build |
+
+## Docker (production image + SQL Server)
+
+```bash
+# From repository root
+cp .env.example .env   # set MSSQL_SA_PASSWORD and connection strings
+docker compose up --build -d
+curl -sS http://localhost:3000/api/health
+```
 
 ## Module boundaries
 
