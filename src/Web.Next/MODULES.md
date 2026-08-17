@@ -9,9 +9,9 @@ into top-level modules under `src/`.
 | -------- | ------------ | ------------------------------------------------------- |
 | `app`    | `src/app`    | Next.js App Router routes, layouts, and UI entry points |
 | `domain` | `src/domain` | Pure business rules (catalog, basket, order)            |
-| `data`   | `src/data`   | Persistence adapters and repository implementations     |
+| `data`   | `src/data`   | Persistence adapters, SQL Server seed, repositories     |
 | `auth`   | `src/auth`   | Identity, sessions, and authorization helpers           |
-| `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic |
+| `shared` | `src/shared` | Cross-cutting types, demo fixtures, shared utilities    |
 
 ## Import aliases
 
@@ -46,5 +46,6 @@ Disallowed:
 - `shared` must not import `app`, `domain`, `data`, or `auth`
 - No database clients or storefront feature code in this scaffold ticket
 
-Later tickets fill these modules; this ticket only establishes the empty
-boundaries and executable toolchain.
+`shared/fixtures` holds deterministic demo users/roles/catalog data.
+`data/seed` applies that data to SQL Server (`npm run db:seed` / `db:reset`).
+Repository implementations land in later tickets (LCFM-5/6/7).
