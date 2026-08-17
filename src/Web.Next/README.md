@@ -1,7 +1,8 @@
 # Next.js app for eShopOnWeb (LCFM migration)
 
 App Router foundation (LCFM-2) plus shared API contracts and authorization
-constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
+constants (LCFM-3). LCFM-4 adds the shared visual shell and static asset
+pipeline. No auth flows or database repositories yet.
 
 ## Scripts
 
@@ -24,6 +25,14 @@ Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
 See [docs/ci.md](./docs/ci.md) for GitHub Actions gates, lockfile rules, artifacts,
 and local commands that match the workflow (LCFM-25).
+
+## Shell and assets
+
+- Root layout wraps pages in `AppShell` (header nav slots, footer, responsive containers).
+- Page titles use the `%s - Microsoft.eShopOnWeb` metadata template.
+- Brand, product images, Montserrat fonts, and favicon live under `public/`.
+- Shared styles are imported from `src/styles/` (ported from `src/Web/wwwroot`).
+- Reusable `LoadingState`, `EmptyState`, and `ErrorState` live in `src/shared/ui`.
 
 ## Module boundaries
 
