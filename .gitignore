@@ -266,3 +266,9 @@ pub/
 **/.next/
 **/coverage/
 *.tsbuildinfo
+
+# Local Docker / Next.js secrets (LCFM-26) — keep .env.example committed
+.env
+.env.local
+.env.*.local
+!.env.example
