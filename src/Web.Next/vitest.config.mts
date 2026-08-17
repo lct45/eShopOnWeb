@@ -17,6 +17,10 @@ export default defineConfig({
       "@/auth": path.resolve(__dirname, "./src/auth"),
       "@/shared": path.resolve(__dirname, "./src/shared"),
       "@": path.resolve(__dirname, "./src"),
+      "next/link": path.resolve(
+        __dirname,
+        "./src/shared/ui/__mocks__/next-link.tsx",
+      ),
     },
   },
 });
