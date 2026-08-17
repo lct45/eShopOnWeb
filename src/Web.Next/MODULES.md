@@ -5,13 +5,13 @@ into top-level modules under `src/`.
 
 ## Layout
 
-| Module   | Path         | Responsibility                                          |
-| -------- | ------------ | ------------------------------------------------------- |
-| `app`    | `src/app`    | Next.js App Router routes, layouts, and UI entry points |
-| `domain` | `src/domain` | Pure business rules (catalog, basket, order)            |
-| `data`   | `src/data`   | Persistence adapters and repository implementations     |
-| `auth`   | `src/auth`   | Identity, sessions, and authorization helpers           |
-| `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic |
+| Module   | Path         | Responsibility                                                                                                               |
+| -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `app`    | `src/app`    | Next.js App Router routes, layouts, and UI entry points                                                                      |
+| `domain` | `src/domain` | Pure business rules (catalog, basket, order)                                                                                 |
+| `data`   | `src/data`   | Persistence adapters and repository implementations                                                                          |
+| `auth`   | `src/auth`   | Identity, sessions, and authorization helpers                                                                                |
+| `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic (includes `contracts/` API DTOs and `authorization/` role constants) |
 
 ## Import aliases
 
@@ -46,5 +46,12 @@ Disallowed:
 - `shared` must not import `app`, `domain`, `data`, or `auth`
 - No database clients or storefront feature code in this scaffold ticket
 
-Later tickets fill these modules; this ticket only establishes the empty
-boundaries and executable toolchain.
+## Shared contracts (LCFM-3)
+
+Framework-independent TypeScript DTOs live under `src/shared/contracts/` and role
+constants under `src/shared/authorization/`. They mirror PublicApi /
+BlazorShared wire shapes (camelCase JSON field names) and must not import React,
+Next.js, or database packages.
+
+Later tickets fill remaining modules; foundation tickets establish contracts and
+the executable toolchain.
