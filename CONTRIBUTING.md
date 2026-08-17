@@ -30,6 +30,7 @@ Migration work is tracked in the [LCFM Jira project](https://fe-anysphere-demo.a
 2. Link the `LCFM-*` ticket and name the stage from `docs/migration-stage-gates.md`. The ticket map is in `docs/dotnet-to-nextjs-migration.md`.
 3. Land tests in the same PR as the behavior change.
 4. Expect Cursor Bugbot to review the diff against `.cursor/BUGBOT.md` (and nested rules under `domain/`, `data/`, and `auth/`). Bugbot does not run the test suite; CI does.
+5. For Next.js work under `src/Web.Next`, run `npm ci` then `npm run verify:ci` (see `src/Web.Next/docs/ci.md`). The Web.Next GitHub Actions workflow (LCFM-25) mirrors those gates; the .NET workflow remains until cutover.
 
 
 - [Pull Request Check List](https://ardalis.com/github-pull-request-checklist/)

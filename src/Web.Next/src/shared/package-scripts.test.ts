@@ -10,8 +10,12 @@ describe("package scripts", () => {
 
     expect(packageJson.scripts.build).toBe("next build");
     expect(packageJson.scripts.test).toBe("vitest run");
+    expect(packageJson.scripts["test:ci"]).toContain("vitest run");
+    expect(packageJson.scripts["test:ci"]).toContain("--coverage");
+    expect(packageJson.scripts["test:ci"]).toContain("junit");
     expect(packageJson.scripts.typecheck).toBe("tsc --noEmit");
-    expect(packageJson.scripts.lint).toBe("eslint .");
+    expect(packageJson.scripts.lint).toBe("eslint . --max-warnings 0");
     expect(packageJson.scripts["format:check"]).toBe("prettier --check .");
+    expect(packageJson.scripts["verify:ci"]).toContain("test:ci");
   });
 });

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // CI artifacts (LCFM-25)
+    "coverage/**",
+    "reports/**",
   ]),
 ]);
 
