@@ -29,15 +29,12 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release
 
-    # Microsoft.Playwright does not download browser binaries. EndToEndTests launch
-    # Chromium, so CI must install it or `dotnet test` on the solution fails.
-    - name: Install Playwright browsers
-      run: pwsh tests/EndToEndTests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
-
     # See https://josh-ops.com/posts/github-code-coverage/
     # Add coverlet.collector nuget package to test project - 'dotnet add <TestProject.cspoj> package coverlet
+    # EndToEndTests boot the Razor app against LocalDB and Chromium. ubuntu-latest has
+    # neither, so solution-wide `dotnet test` fails even after installing Playwright.
     - name: Test with dotnet
-      run: dotnet test ${{ env.SOLUTION_FILE }} --no-restore --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+      run: dotnet test ${{ env.SOLUTION_FILE }} --no-restore --verbosity normal --filter "FullyQualifiedName!~Microsoft.eShopWeb.EndToEndTests" --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
       
     - name: Copy Coverage To Predictable Location
       run: find coverage -type f -name coverage.cobertura.xml -exec cp -p {} coverage/coverage.cobertura.xml \;
