@@ -1,0 +1,22 @@
+
+> web-next@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /workspace/src/Web.Next
+
+ ✓ src/shared/module-boundaries.test.ts (1 test) 2ms
+ ✓ src/shared/scaffold.test.ts (1 test) 3ms
+ ✓ src/shared/authorization/constants.test.ts (2 tests) 3ms
+ ✓ src/shared/package-scripts.test.ts (1 test) 2ms
+ ✓ src/shared/contracts/contracts.test.ts (7 tests) 5ms
+
+ Test Files  5 passed (5)
+      Tests  12 passed (12)
+   Start at  16:43:56
+   Duration  266ms (transform 114ms, setup 0ms, collect 200ms, tests 15ms, environment 1ms, prepare 316ms)
+
+
+> web-next@0.1.0 typecheck
+> tsc --noEmit
+
