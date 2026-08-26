@@ -17,5 +17,8 @@ describe("package scripts", () => {
     expect(packageJson.scripts.lint).toBe("eslint . --max-warnings 0");
     expect(packageJson.scripts["format:check"]).toBe("prettier --check .");
     expect(packageJson.scripts["verify:ci"]).toContain("test:ci");
+    expect(packageJson.scripts["test:e2e:catalog"]).toBe(
+          "tsx src/data/scripts/catalog-e2e.ts",
+        );
   });
 });

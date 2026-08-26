@@ -1,0 +1,12 @@
+
+> web-next@0.1.0 test:e2e:catalog
+> tsx src/data/scripts/catalog-e2e.ts
+
+Using MemorySqlExecutor (set CATALOG_SQL_CONNECTION_STRING for live SQL Server)
+1) Read seeded catalog without destructive migration
+   brands=5 types=4 items=12
+2) Filter + page + count
+   netMugs=1 page=4 netBrandCount=6
+3) CRUD round-trip
+   created #21
+OK catalog e2e walkthrough passed

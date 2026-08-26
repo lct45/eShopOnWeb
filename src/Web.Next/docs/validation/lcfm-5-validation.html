@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LCFM-5 validation evidence</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f4;
+        --fg: #26251e;
+        --accent: #0b5fff;
+        --card: #f2f1ed;
+      }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #e8eefc, var(--bg) 45%);
+        color: var(--fg);
+        padding: 2rem;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.25rem;
+      }
+      .meta {
+        opacity: 0.7;
+        margin-bottom: 1.5rem;
+      }
+      section {
+        background: var(--card);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--accent);
+      }
+      h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.1rem;
+      }
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+      .pass {
+        color: #0b6e4f;
+        font-weight: 600;
+      }
+      ul {
+        margin: 0.25rem 0 0;
+        padding-left: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>LCFM-5 — Catalog SQL Server models &amp; repositories</h1>
+      <p class="meta">
+        Validation captured in Cloud Agent · MemorySqlExecutor + Vitest · live SQL
+        gated on <code>CATALOG_SQL_CONNECTION_STRING</code>
+      </p>
+
+      <section>
+        <h2>Acceptance criteria</h2>
+        <ul>
+          <li class="pass">Seeded catalog (5 brands / 4 types / 12 items) readable without destructive migration</li>
+          <li class="pass">Filter, page, count, and CRUD repository tests pass (memory SQL Server semantics)</li>
+          <li class="pass">Connections resolved only from environment variables</li>
+          <li class="pass">Domain ports expose plain CatalogItem/Brand/Type — no ORM records</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Vitest (<code>npm run test</code>)</h2>
+        <pre>
+Test Files  8 passed (8)
+     Tests  15 passed | 1 skipped (16)
+  Duration  ~0.5s
+
+sql-catalog-repositories.test.ts  (5)  — seed read, filter/page/count, CRUD, cascade, port shape
+sql-catalog.integration.test.ts   (1 skipped without SQL Server)
+catalog-schema.test.ts            (3)
+domain/catalog/types.test.ts      (2)
+        </pre>
+      </section>
+
+      <section>
+        <h2>E2E walkthrough (<code>npm run test:e2e:catalog</code>)</h2>
+        <pre>
+Using MemorySqlExecutor (set CATALOG_SQL_CONNECTION_STRING for live SQL Server)
+1) Read seeded catalog without destructive migration
+   brands=5 types=4 items=12
+2) Filter + page + count
+   netMugs=1 page=4 netBrandCount=6
+3) CRUD round-trip
+   created #21
+OK catalog e2e walkthrough passed
+        </pre>
+      </section>
+    </main>
+  </body>
+</html>
