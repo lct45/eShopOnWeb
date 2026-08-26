@@ -5,6 +5,10 @@ import type {
   SqlRow,
 } from "@/data/sql/sql-executor";
 import {
+  CATALOG_HILO_INCREMENT,
+  CatalogSequences,
+} from "@/data/sql/catalog-schema";
+import {
   CATALOG_BRANDS,
   CATALOG_HILO_RESTART,
   CATALOG_ITEMS,
@@ -126,15 +130,44 @@ export class MemorySqlExecutor implements SqlExecutor {
     return cloneState(this.state);
   }
 
+  private nextSequenceValue(sequence: string): number {
+    if (sequence === CatalogSequences.brand) {
+      const value = this.state.nextBrandId;
+      this.state.nextBrandId += CATALOG_HILO_INCREMENT;
+      return value;
+    }
+    if (sequence === CatalogSequences.type) {
+      const value = this.state.nextTypeId;
+      this.state.nextTypeId += CATALOG_HILO_INCREMENT;
+      return value;
+    }
+    if (sequence === CatalogSequences.item) {
+      const value = this.state.nextItemId;
+      this.state.nextItemId += CATALOG_HILO_INCREMENT;
+      return value;
+    }
+    throw new Error(`MemorySqlExecutor: unknown sequence ${sequence}`);
+  }
+
   async query(
     sqlText: string,
     params: SqlParameter[] = [],
   ): Promise<SqlQueryResult> {
     const sql = normalizeSql(sqlText);
 
+    const nextValueMatch = /^SELECT NEXT VALUE FOR \[dbo\]\.\[([^\]]+)\]/i.exec(
+      sql,
+    );
+    if (nextValueMatch) {
+      const value = this.nextSequenceValue(nextValueMatch[1]!);
+      return { rows: [{ value }], rowsAffected: 0 };
+    }
+
     if (/^INSERT INTO \[dbo\]\.\[CatalogBrands\]/i.test(sql)) {
       const usesHilo = /NEXT VALUE FOR/i.test(sql);
-      const id = usesHilo ? this.state.nextBrandId++ : Number(params[0]);
+      const id = usesHilo
+        ? this.nextSequenceValue(CatalogSequences.brand)
+        : Number(params[0]);
       const brand = String(usesHilo ? params[0] : params[1]);
       if (this.state.brands.some((b) => b.Id === id)) {
         throw new Error(`PK violation: CatalogBrands.Id=${id}`);
@@ -149,7 +182,9 @@ export class MemorySqlExecutor implements SqlExecutor {
 
     if (/^INSERT INTO \[dbo\]\.\[CatalogTypes\]/i.test(sql)) {
       const usesHilo = /NEXT VALUE FOR/i.test(sql);
-      const id = usesHilo ? this.state.nextTypeId++ : Number(params[0]);
+      const id = usesHilo
+        ? this.nextSequenceValue(CatalogSequences.type)
+        : Number(params[0]);
       const type = String(usesHilo ? params[0] : params[1]);
       if (this.state.types.some((t) => t.Id === id)) {
         throw new Error(`PK violation: CatalogTypes.Id=${id}`);
@@ -164,7 +199,9 @@ export class MemorySqlExecutor implements SqlExecutor {
 
     if (/^INSERT INTO \[dbo\]\.\[Catalog\]/i.test(sql)) {
       const usesHilo = /NEXT VALUE FOR/i.test(sql);
-      const id = usesHilo ? this.state.nextItemId++ : Number(params[0]);
+      const id = usesHilo
+        ? this.nextSequenceValue(CatalogSequences.item)
+        : Number(params[0]);
       const offset = usesHilo ? 0 : 1;
       const name = String(params[offset]);
       const description = String(params[offset + 1]);
@@ -321,9 +358,7 @@ export class MemorySqlExecutor implements SqlExecutor {
         params,
         sql,
       );
-      let rows = filtered
-        .map((r) => ({ ...r }))
-        .sort((a, b) => a.Name.localeCompare(b.Name));
+      let rows = filtered.map((r) => ({ ...r })).sort((a, b) => a.Id - b.Id);
 
       if (/OFFSET\s*\?\s*ROWS\s*FETCH\s+NEXT\s*\?\s*ROWS\s*ONLY/i.test(sql)) {
         const skip = Number(params[nextParam]);

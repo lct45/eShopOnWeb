@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  CATALOG_HILO_INCREMENT,
   CATALOG_SCHEMA_DDL,
   CatalogForeignKeys,
   CatalogItemColumns,
@@ -22,6 +23,7 @@ describe("catalog SQL Server schema mapping", () => {
     expect(CatalogSequences.item).toBe("catalog_hilo");
     expect(CatalogSequences.brand).toBe("catalog_brand_hilo");
     expect(CatalogSequences.type).toBe("catalog_type_hilo");
+    expect(CATALOG_HILO_INCREMENT).toBe(10);
   });
 
   it("documents cascade FKs and avoids PostgreSQL-specific DDL", () => {
@@ -33,5 +35,7 @@ describe("catalog SQL Server schema mapping", () => {
     expect(CATALOG_SCHEMA_DDL.toLowerCase()).not.toContain("serial");
     expect(CATALOG_SCHEMA_DDL.toLowerCase()).not.toContain("postgres");
     expect(CATALOG_SCHEMA_DDL).not.toContain("DROP COLUMN");
+    expect(CATALOG_SCHEMA_DDL.toUpperCase()).not.toContain("DROP TABLE");
+    expect(CATALOG_SCHEMA_DDL.toUpperCase()).not.toContain("DROP SEQUENCE");
   });
 });

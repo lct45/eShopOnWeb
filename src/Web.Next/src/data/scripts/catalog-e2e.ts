@@ -22,13 +22,22 @@ import {
   CATALOG_TYPES,
 } from "@/shared/fixtures/catalog";
 
-async function seedLive(db: SqlExecutor): Promise<void> {
+async function ensureLive(db: SqlExecutor): Promise<void> {
   const batches = CATALOG_SCHEMA_DDL.split(";")
     .map((part) => part.trim())
     .filter(Boolean);
   for (const batch of batches) {
     await db.query(batch);
   }
+
+  const existing = await db.query(
+    `SELECT COUNT(*) AS [count] FROM [dbo].[Catalog]`,
+  );
+  const existingCount = Number(existing.rows[0]?.count ?? 0);
+  if (existingCount > 0) {
+    return;
+  }
+
   for (const brand of CATALOG_BRANDS) {
     await db.query(
       `INSERT INTO [dbo].[CatalogBrands] ([Id], [Brand]) VALUES (?, ?)`,
@@ -82,7 +91,7 @@ async function withExecutor<T>(
   console.log("Using live SQL Server via CATALOG_SQL_CONNECTION_STRING");
   const client = new MssqlClient({ connectionString });
   try {
-    await seedLive(client);
+    await ensureLive(client);
     return await work(client);
   } finally {
     await client.close();

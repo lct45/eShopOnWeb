@@ -1,5 +1,6 @@
 import type { SqlExecutor, SqlRow } from "@/data/sql/sql-executor";
 import {
+  CATALOG_HILO_INCREMENT,
   CatalogBrandColumns,
   CatalogItemColumns,
   CatalogSequences,
@@ -95,8 +96,42 @@ const ITEM_SELECT = `
   [${CatalogItemColumns.catalogBrandId}]
 `;
 
-export class SqlCatalogBrandRepository implements CatalogBrandRepository {
+/**
+ * Client-side EF HiLo: one `NEXT VALUE FOR` allocates a block of
+ * {@link CATALOG_HILO_INCREMENT} ids; subsequent creates consume that block.
+ */
+class SqlHiLoAllocator {
+  private readonly blocks = new Map<string, { next: number; last: number }>();
+
   constructor(private readonly db: SqlExecutor) {}
+
+  async next(sequence: string): Promise<number> {
+    const block = this.blocks.get(sequence);
+    if (block && block.next <= block.last) {
+      const id = block.next;
+      block.next += 1;
+      return id;
+    }
+
+    const result = await this.db.query(
+      `SELECT NEXT VALUE FOR [dbo].[${sequence}] AS [value]`,
+    );
+    const row = result.rows[0];
+    if (!row) throw new Error(`Failed to allocate HiLo value from ${sequence}`);
+    const start = requireNumber(row, "value");
+    this.blocks.set(sequence, {
+      next: start + 1,
+      last: start + CATALOG_HILO_INCREMENT - 1,
+    });
+    return start;
+  }
+}
+
+export class SqlCatalogBrandRepository implements CatalogBrandRepository {
+  constructor(
+    private readonly db: SqlExecutor,
+    private readonly hilo = new SqlHiLoAllocator(db),
+  ) {}
 
   async getById(id: number): Promise<CatalogBrand | null> {
     const result = await this.db.query(
@@ -119,12 +154,13 @@ export class SqlCatalogBrandRepository implements CatalogBrandRepository {
   }
 
   async create(brand: NewCatalogBrand): Promise<CatalogBrand> {
+    const id = await this.hilo.next(CatalogSequences.brand);
     const insert = await this.db.query(
       `INSERT INTO [dbo].[${CatalogTables.brands}]
         ([${CatalogBrandColumns.id}], [${CatalogBrandColumns.brand}])
        OUTPUT INSERTED.[${CatalogBrandColumns.id}], INSERTED.[${CatalogBrandColumns.brand}]
-       VALUES (NEXT VALUE FOR [dbo].[${CatalogSequences.brand}], ?)`,
-      [brand.brand],
+       VALUES (?, ?)`,
+      [id, brand.brand],
     );
     const created = insert.rows[0];
     if (!created) throw new Error("Failed to insert catalog brand");
@@ -153,7 +189,10 @@ export class SqlCatalogBrandRepository implements CatalogBrandRepository {
 }
 
 export class SqlCatalogTypeRepository implements CatalogTypeRepository {
-  constructor(private readonly db: SqlExecutor) {}
+  constructor(
+    private readonly db: SqlExecutor,
+    private readonly hilo = new SqlHiLoAllocator(db),
+  ) {}
 
   async getById(id: number): Promise<CatalogType | null> {
     const result = await this.db.query(
@@ -176,12 +215,13 @@ export class SqlCatalogTypeRepository implements CatalogTypeRepository {
   }
 
   async create(type: NewCatalogType): Promise<CatalogType> {
+    const id = await this.hilo.next(CatalogSequences.type);
     const insert = await this.db.query(
       `INSERT INTO [dbo].[${CatalogTables.types}]
         ([${CatalogTypeColumns.id}], [${CatalogTypeColumns.type}])
        OUTPUT INSERTED.[${CatalogTypeColumns.id}], INSERTED.[${CatalogTypeColumns.type}]
-       VALUES (NEXT VALUE FOR [dbo].[${CatalogSequences.type}], ?)`,
-      [type.type],
+       VALUES (?, ?)`,
+      [id, type.type],
     );
     const created = insert.rows[0];
     if (!created) throw new Error("Failed to insert catalog type");
@@ -210,7 +250,10 @@ export class SqlCatalogTypeRepository implements CatalogTypeRepository {
 }
 
 export class SqlCatalogItemRepository implements CatalogItemRepository {
-  constructor(private readonly db: SqlExecutor) {}
+  constructor(
+    private readonly db: SqlExecutor,
+    private readonly hilo = new SqlHiLoAllocator(db),
+  ) {}
 
   async getById(id: number): Promise<CatalogItem | null> {
     const result = await this.db.query(
@@ -229,7 +272,7 @@ export class SqlCatalogItemRepository implements CatalogItemRepository {
       `SELECT ${ITEM_SELECT}
        FROM [dbo].[${CatalogTables.items}]
        ${where}
-       ORDER BY [${CatalogItemColumns.name}]`,
+       ORDER BY [${CatalogItemColumns.id}]`,
       params,
     );
     return result.rows.map(mapItem);
@@ -244,7 +287,7 @@ export class SqlCatalogItemRepository implements CatalogItemRepository {
       `SELECT ${ITEM_SELECT}
        FROM [dbo].[${CatalogTables.items}]
        ${where}
-       ORDER BY [${CatalogItemColumns.name}]
+       ORDER BY [${CatalogItemColumns.id}]
        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY`,
       [...params, page.skip, page.take],
     );
@@ -265,6 +308,7 @@ export class SqlCatalogItemRepository implements CatalogItemRepository {
   }
 
   async create(item: NewCatalogItem): Promise<CatalogItem> {
+    const id = await this.hilo.next(CatalogSequences.item);
     const insert = await this.db.query(
       `INSERT INTO [dbo].[${CatalogTables.items}]
         ([${CatalogItemColumns.id}], [${CatalogItemColumns.name}],
@@ -275,8 +319,9 @@ export class SqlCatalogItemRepository implements CatalogItemRepository {
               INSERTED.[${CatalogItemColumns.description}], INSERTED.[${CatalogItemColumns.price}],
               INSERTED.[${CatalogItemColumns.pictureUri}], INSERTED.[${CatalogItemColumns.catalogTypeId}],
               INSERTED.[${CatalogItemColumns.catalogBrandId}]
-       VALUES (NEXT VALUE FOR [dbo].[${CatalogSequences.item}], ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
+        id,
         item.name,
         item.description,
         item.price,
@@ -333,9 +378,10 @@ export type CatalogRepositories = {
 export function createSqlCatalogRepositories(
   db: SqlExecutor,
 ): CatalogRepositories {
+  const hilo = new SqlHiLoAllocator(db);
   return {
-    brands: new SqlCatalogBrandRepository(db),
-    types: new SqlCatalogTypeRepository(db),
-    items: new SqlCatalogItemRepository(db),
+    brands: new SqlCatalogBrandRepository(db, hilo),
+    types: new SqlCatalogTypeRepository(db, hilo),
+    items: new SqlCatalogItemRepository(db, hilo),
   };
 }

@@ -6,6 +6,7 @@
  */
 
 export {
+  CATALOG_HILO_INCREMENT,
   CATALOG_SCHEMA_DDL,
   CatalogBrandColumns,
   CatalogForeignKeys,

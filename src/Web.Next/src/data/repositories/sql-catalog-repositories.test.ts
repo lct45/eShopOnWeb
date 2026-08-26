@@ -41,15 +41,16 @@ describe("SQL catalog repositories (memory SQL Server semantics)", () => {
     const total = await repos.items.count();
     expect(total).toBe(12);
 
-    const page = await repos.items.listPaged({}, { skip: 0, take: 5 });
-    expect(page).toHaveLength(5);
-    const first = page[0];
-    const second = page[1];
-    expect(first && second && first.name <= second.name).toBe(true);
+    const page = await repos.items.listPaged({}, { skip: 0, take: 10 });
+    expect(page).toHaveLength(10);
+    expect(page.map((i) => i.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(page.map((i) => i.name)).toContain("Roslyn Red Sheet");
+    expect(page.map((i) => i.name)).not.toContain("Prism White TShirt");
 
-    const page2 = await repos.items.listPaged({}, { skip: 5, take: 5 });
-    expect(page2).toHaveLength(5);
-    expect(page.map((i) => i.id)).not.toEqual(page2.map((i) => i.id));
+    const page2 = await repos.items.listPaged({}, { skip: 10, take: 10 });
+    expect(page2).toHaveLength(2);
+    expect(page2.map((i) => i.id)).toEqual([11, 12]);
+    expect(page2.map((i) => i.name)).toContain("Prism White TShirt");
 
     const filteredCount = await repos.items.count({ brandId: 5 });
     expect(filteredCount).toBe(
@@ -73,6 +74,17 @@ describe("SQL catalog repositories (memory SQL Server semantics)", () => {
     });
     expect(created.id).toBeGreaterThanOrEqual(21);
 
+    const secondItem = await repos.items.create({
+      name: "Contoso Hoodie 2",
+      description: "Demo hoodie 2",
+      price: 19.99,
+      pictureUri: "http://catalogbaseurltobereplaced/images/products/98.png",
+      catalogBrandId: brand.id,
+      catalogTypeId: type.id,
+    });
+    expect(secondItem.id).toBe(created.id + 1);
+    await repos.items.delete(secondItem.id);
+
     const updated = await repos.items.update({
       ...created,
       price: 24.5,
@@ -92,6 +104,23 @@ describe("SQL catalog repositories (memory SQL Server semantics)", () => {
 
     await repos.brands.delete(brand.id);
     expect(await repos.brands.getById(brand.id)).toBeNull();
+  });
+
+  it("assigns consecutive catalog ids from the EF HiLo block", async () => {
+    const ids: number[] = [];
+    for (let n = 0; n < 11; n++) {
+      const item = await repos.items.create({
+        name: `Hilo ${n}`,
+        description: "hilo",
+        price: 1,
+        pictureUri:
+          "http://catalogbaseurltobereplaced/images/products/hilo.png",
+        catalogBrandId: 2,
+        catalogTypeId: 2,
+      });
+      ids.push(item.id);
+    }
+    expect(ids).toEqual([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
   });
 
   it("cascades catalog item deletes when a brand is deleted", async () => {

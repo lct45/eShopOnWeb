@@ -26,6 +26,14 @@ describeSql("SQL Server catalog integration", () => {
       await client.query(batch);
     }
 
+    const existing = await client.query(
+      `SELECT COUNT(*) AS [count] FROM [dbo].[Catalog]`,
+    );
+    const existingCount = Number(existing.rows[0]?.count ?? 0);
+    if (existingCount > 0) {
+      return;
+    }
+
     for (const brand of CATALOG_BRANDS) {
       await client.query(
         `INSERT INTO [dbo].[CatalogBrands] ([Id], [Brand]) VALUES (?, ?)`,
