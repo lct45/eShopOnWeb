@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   createSqlIdentityRepositories,
   getIdentityConnectionString,
-  IDENTITY_SCHEMA_DDL,
   MssqlClient,
   seedDemoIdentity,
 } from "@/data";
@@ -18,7 +17,6 @@ describe.runIf(Boolean(connectionString))(
     it("seeds demo users and verifies password hashes on live SQL Server", async () => {
       const client = new MssqlClient({ connectionString: connectionString! });
       try {
-        await client.query(IDENTITY_SCHEMA_DDL);
         const repos = createSqlIdentityRepositories(client);
         await seedDemoIdentity(repos, hashPassword, DEMO_PASSWORD);
 

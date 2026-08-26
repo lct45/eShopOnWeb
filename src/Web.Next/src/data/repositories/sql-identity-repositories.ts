@@ -421,6 +421,10 @@ export class SqlRoleMembershipRepository implements RoleMembershipRepository {
   async addUserToRole(userId: string, roleName: string): Promise<void> {
     const role = await this.roles.getByName(roleName);
     if (!role) throw new Error(`Role not found: ${roleName}`);
+    const current = await this.getRoleNamesForUser(userId);
+    if (current.some((name) => name.toUpperCase() === role.normalizedName)) {
+      return;
+    }
     await this.db.query(
       `INSERT INTO [dbo].[${IdentityTables.userRoles}] (
          [${UserRoleColumns.userId}], [${UserRoleColumns.roleId}]
@@ -650,20 +654,22 @@ export class SqlUserTokenRepository implements UserTokenRepository {
   }
 
   async set(token: UserToken): Promise<void> {
-    await this.db.query(
-      `DELETE FROM [dbo].[${IdentityTables.userTokens}]
-       WHERE [${TokenColumns.userId}] = ?
-         AND [${TokenColumns.loginProvider}] = ?
-         AND [${TokenColumns.name}] = ?`,
-      [token.userId, token.loginProvider, token.name],
-    );
-    await this.db.query(
-      `INSERT INTO [dbo].[${IdentityTables.userTokens}] (
-         [${TokenColumns.userId}], [${TokenColumns.loginProvider}],
-         [${TokenColumns.name}], [${TokenColumns.value}]
-       ) VALUES (?, ?, ?, ?)`,
-      [token.userId, token.loginProvider, token.name, token.value],
-    );
+    await this.db.transaction(async (tx) => {
+      await tx.query(
+        `DELETE FROM [dbo].[${IdentityTables.userTokens}]
+         WHERE [${TokenColumns.userId}] = ?
+           AND [${TokenColumns.loginProvider}] = ?
+           AND [${TokenColumns.name}] = ?`,
+        [token.userId, token.loginProvider, token.name],
+      );
+      await tx.query(
+        `INSERT INTO [dbo].[${IdentityTables.userTokens}] (
+           [${TokenColumns.userId}], [${TokenColumns.loginProvider}],
+           [${TokenColumns.name}], [${TokenColumns.value}]
+         ) VALUES (?, ?, ?, ?)`,
+        [token.userId, token.loginProvider, token.name, token.value],
+      );
+    });
   }
 
   async remove(

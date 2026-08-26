@@ -133,7 +133,6 @@ export function getIdentityConnectionString(): string | undefined {
   return (
     process.env.IDENTITY_SQL_CONNECTION_STRING ??
     process.env.ESHOP_IDENTITY_CONNECTION_STRING ??
-    process.env.ESHOP_SQLSERVER ??
     undefined
   );
 }

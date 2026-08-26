@@ -7,7 +7,6 @@
 
 export {
   ClaimColumns,
-  IDENTITY_SCHEMA_DDL,
   IdentityTables,
   LoginColumns,
   RoleColumns,

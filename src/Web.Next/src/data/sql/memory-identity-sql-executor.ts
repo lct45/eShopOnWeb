@@ -202,7 +202,7 @@ export class MemoryIdentitySqlExecutor implements SqlExecutor {
           (ur) => ur.UserId === userId && ur.RoleId === roleId,
         )
       ) {
-        return { rows: [], rowsAffected: 0 };
+        throw new Error("PK violation: AspNetUserRoles");
       }
       this.state.userRoles.push({ UserId: userId, RoleId: roleId });
       return { rows: [], rowsAffected: 1 };

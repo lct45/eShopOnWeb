@@ -10,7 +10,11 @@ import {
   toUserPublicDto,
 } from "@/domain/identity/types";
 import { Roles } from "@/shared/authorization/constants";
-import { DEMO_PASSWORD, SEED_USERS } from "@/shared/fixtures/identity";
+import {
+  DEMO_PASSWORD,
+  SEED_ROLES,
+  SEED_USERS,
+} from "@/shared/fixtures/identity";
 
 function createRepos() {
   const db = new MemoryIdentitySqlExecutor();
@@ -163,6 +167,16 @@ describe("Sql identity repositories", () => {
       (await repos.tokens.get(userId, "[AspNetUserStore]", "AuthenticatorKey"))
         ?.value,
     ).toBe("otp-secret");
+    await repos.tokens.set({
+      userId,
+      loginProvider: "[AspNetUserStore]",
+      name: "AuthenticatorKey",
+      value: "otp-secret-rotated",
+    });
+    expect(
+      (await repos.tokens.get(userId, "[AspNetUserStore]", "AuthenticatorKey"))
+        ?.value,
+    ).toBe("otp-secret-rotated");
     await repos.tokens.remove(userId, "[AspNetUserStore]", "AuthenticatorKey");
   });
 
@@ -176,5 +190,26 @@ describe("Sql identity repositories", () => {
     ).rejects.toThrow(/Role not found/);
 
     expect(await repos.membership.getRoleNamesForUser(userId)).toEqual([]);
+  });
+
+  it("treats adding an existing role membership as idempotent", async () => {
+    const { db, repos } = createRepos();
+    await seedDemoIdentity(repos, hashPassword, DEMO_PASSWORD);
+    const userId = SEED_USERS[2]!.id;
+
+    await repos.membership.addUserToRole(userId, Roles.ADMINISTRATORS);
+    await repos.membership.setRolesForUser(userId, [Roles.ADMINISTRATORS], []);
+    expect(await repos.membership.getRoleNamesForUser(userId)).toEqual([
+      Roles.ADMINISTRATORS,
+    ]);
+
+    await expect(
+      db.query(
+        `INSERT INTO [dbo].[AspNetUserRoles] (
+           [UserId], [RoleId]
+         ) VALUES (?, ?)`,
+        [userId, SEED_ROLES[0]!.id],
+      ),
+    ).rejects.toThrow(/PK violation: AspNetUserRoles/);
   });
 });

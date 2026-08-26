@@ -1,9 +1,9 @@
 # ASP.NET Identity password hash compatibility (LCFM-6)
 
 eShopOnWeb stores credentials in SQL Server `AspNetUsers.PasswordHash` using
-ASP.NET Core Identity's default **PasswordHasher V3** format (HMAC-SHA256,
-100,000 iterations). The Next.js migration must verify those hashes without
-forcing a password reset at cutover.
+ASP.NET Core Identity's default **PasswordHasher V3** format (HMAC-SHA512,
+100,000 iterations since .NET 7). The Next.js migration must verify those
+hashes without forcing a password reset at cutover.
 
 ## Adapter location
 
@@ -24,11 +24,14 @@ Auth.js (LCFM-11) should:
 Base64 of:
 
 1. `0x01` version byte
-2. PRF uint32 BE (`1` = HMAC-SHA256)
+2. PRF uint32 BE (`2` = HMAC-SHA512, `1` = HMAC-SHA256, `0` = HMAC-SHA1)
 3. Iteration count uint32 BE
 4. Salt length uint32 BE
 5. Salt bytes
 6. Derived subkey bytes
+
+`verifyPassword` reads the stored PRF and iteration count so existing
+eShopOnWeb (HMAC-SHA512) rows and older HMAC-SHA256 hashes both verify.
 
 ## Demo seed
 
