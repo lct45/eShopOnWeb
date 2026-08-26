@@ -32,7 +32,7 @@ npm run verify:ci
 | Node.js | `.nvmrc`, `package.json` `engines.node` | `22`         |
 | npm     | `package.json` `packageManager`         | `npm@10.9.7` |
 
-CI uses `actions/setup-node` with `node-version-file` + `cache: npm` against `package-lock.json`, then **`npm ci`** (never `npm install`) so the lockfile is not rewritten.
+CI uses `actions/setup-node` with `node-version-file` + `cache: npm` against `package-lock.json`, enables Corepack so `packageManager` (`npm@10.9.7`) is the npm on PATH, then **`npm ci`** (never `npm install`) so the lockfile is not rewritten.
 
 ## Artifacts visible from the workflow
 

@@ -38,6 +38,11 @@ jobs:
           cache: npm
           cache-dependency-path: src/Web.Next/package-lock.json
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
       - name: Install dependencies (lockfile only)
         run: npm ci
 

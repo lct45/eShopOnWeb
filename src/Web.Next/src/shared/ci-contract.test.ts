@@ -32,6 +32,8 @@ describe("Web.Next CI contract (LCFM-25)", () => {
     expect(workflow).toContain(
       "cache-dependency-path: src/Web.Next/package-lock.json",
     );
+    expect(workflow).toContain("corepack enable");
+    expect(workflow).toContain("corepack prepare --activate");
     expect(workflow).toContain("npm ci");
     expect(workflow).not.toMatch(/^\s*run:\s*npm install\b/m);
     expect(workflow).toContain("npm run format:check");
@@ -78,5 +80,15 @@ describe("Web.Next CI contract (LCFM-25)", () => {
     ]) {
       expect(ciDocs).toContain(command);
     }
+
+    expect(ciDocs).toContain("Corepack");
+  });
+
+  it("does not prettier-check dumped validation HTML", () => {
+    const prettierIgnore = readFileSync(
+      resolve(webNextRoot, ".prettierignore"),
+      "utf8",
+    );
+    expect(prettierIgnore).toMatch(/^docs\/validation$/m);
   });
 });

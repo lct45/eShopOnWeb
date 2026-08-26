@@ -6,3 +6,4 @@ reports
 package-lock.json
 *.ico
 public
+docs/validation
