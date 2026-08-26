@@ -52,6 +52,16 @@ describe("SQL catalog repositories (memory SQL Server semantics)", () => {
     expect(page2.map((i) => i.id)).toEqual([11, 12]);
     expect(page2.map((i) => i.name)).toContain("Prism White TShirt");
 
+    const allMatches = await repos.items.listPaged({}, { skip: 0, take: 0 });
+    expect(allMatches).toHaveLength(12);
+    expect(allMatches.map((i) => i.id)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+    ]);
+
+    const remaining = await repos.items.listPaged({}, { skip: 10, take: 0 });
+    expect(remaining).toHaveLength(2);
+    expect(remaining.map((i) => i.id)).toEqual([11, 12]);
+
     const filteredCount = await repos.items.count({ brandId: 5 });
     expect(filteredCount).toBe(
       CATALOG_ITEMS.filter((i) => i.catalogBrandId === 5).length,

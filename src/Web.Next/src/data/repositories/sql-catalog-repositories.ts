@@ -283,13 +283,15 @@ export class SqlCatalogItemRepository implements CatalogItemRepository {
     page: CatalogItemPage,
   ): Promise<CatalogItem[]> {
     const { where, params } = buildItemFilter(filter);
+    // CatalogFilterPaginatedSpecification: take 0 means all remaining matches.
+    const take = page.take === 0 ? Number.MAX_SAFE_INTEGER : page.take;
     const result = await this.db.query(
       `SELECT ${ITEM_SELECT}
        FROM [dbo].[${CatalogTables.items}]
        ${where}
        ORDER BY [${CatalogItemColumns.id}]
        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY`,
-      [...params, page.skip, page.take],
+      [...params, page.skip, take],
     );
     return result.rows.map(mapItem);
   }
