@@ -1,0 +1,11 @@
+
+> web-next@0.1.0 test:e2e:identity
+> tsx src/data/scripts/identity-e2e.ts
+
+→ Seeding demo identity (AppIdentityDbContextSeed parity)...
+→ Users loaded: admin@microsoft.com, demouser@microsoft.com, productmgr@microsoft.com
+→ Public DTOs omit passwordHash / securityStamp
+→ admin roles: Administrators
+→ ASP.NET Identity V3 password verify OK for demouser
+→ Role CRUD + membership add/remove OK
+✓ identity e2e passed

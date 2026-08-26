@@ -1,7 +1,7 @@
 # Next.js app for eShopOnWeb (LCFM migration)
 
-App Router foundation (LCFM-2) plus shared API contracts and authorization
-constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
+App Router foundation (LCFM-2), shared API contracts (LCFM-3), and identity SQL
+Server models/repositories (LCFM-6).
 
 ## Scripts
 
@@ -17,6 +17,7 @@ constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
 | `npm run test:ci`                 | Vitest with JUnit + coverage (CI artifact producers)        |
 | `npm run verify`                  | typecheck + lint + format + test + build                    |
 | `npm run verify:ci`               | Full CI mirror: format + lint + typecheck + test:ci + build |
+| `npm run test:e2e:identity`       | Identity repository e2e (in-memory SQL)  |
 
 Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
@@ -43,5 +44,25 @@ import {
 ```
 
 Wire field names are camelCase to match ASP.NET Core `JsonSerializerDefaults.Web`.
-Vitest coverage lives in `src/shared/contracts/contracts.test.ts` and
-`src/shared/authorization/constants.test.ts`.
+
+## Identity repositories (LCFM-6)
+
+```ts
+import { hashPassword } from "@/auth";
+import {
+  createSqlIdentityRepositories,
+  MemoryIdentitySqlExecutor,
+  seedDemoIdentity,
+} from "@/data";
+import { DEMO_PASSWORD } from "@/shared";
+
+const db = new MemoryIdentitySqlExecutor();
+const repos = createSqlIdentityRepositories(db);
+await seedDemoIdentity(repos, hashPassword, DEMO_PASSWORD);
+```
+
+Password compatibility notes:
+[docs/identity-password-compatibility.md](./docs/identity-password-compatibility.md).
+
+Optional live SQL Server tests set `IDENTITY_SQL_CONNECTION_STRING` (or
+`ESHOP_IDENTITY_CONNECTION_STRING`).

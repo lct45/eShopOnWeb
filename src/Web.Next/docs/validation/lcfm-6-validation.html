@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LCFM-6 Identity validation</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f4;
+        --fg: #26251e;
+        --accent: #f54e00;
+        --card: #f2f1ed;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #fff7f2, var(--bg));
+        color: var(--fg);
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      .accent {
+        color: var(--accent);
+      }
+      section {
+        background: var(--card);
+        padding: 1.25rem 1.5rem;
+        margin: 1rem 0;
+        max-width: 52rem;
+      }
+      code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.9em;
+      }
+      ul {
+        line-height: 1.5;
+      }
+      .pass {
+        font-weight: 600;
+        color: #0a7a32;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><span class="accent">LCFM-6</span> Identity SQL models &amp; repositories</h1>
+    <p>
+      Validation checklist for the Next.js migration identity data layer
+      (<code>src/Web.Next</code>).
+    </p>
+    <section>
+      <h2>Acceptance</h2>
+      <ul>
+        <li class="pass">Demo users/roles readable without destructive migration</li>
+        <li class="pass">Repository tests: user lookup, role CRUD, membership</li>
+        <li class="pass">Password hashes never on public DTOs</li>
+        <li class="pass">Data access isolated from Next.js request handlers</li>
+        <li class="pass">ASP.NET Identity V3 hash adapter documented</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Commands</h2>
+      <pre><code>cd src/Web.Next
+npm ci
+npm run verify
+npm run test:e2e:identity</code></pre>
+    </section>
+  </body>
+</html>
