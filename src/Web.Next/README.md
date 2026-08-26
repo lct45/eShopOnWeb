@@ -1,7 +1,7 @@
-# Next.js scaffold for eShopOnWeb (LCFM-2)
+# Next.js app for eShopOnWeb (LCFM migration)
 
-Minimal App Router foundation only. No storefront UI, auth flows, or database
-integration in this package yet.
+App Router foundation (LCFM-2) plus shared API contracts and authorization
+constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
 
 ## Scripts
 
@@ -28,3 +28,20 @@ and local commands that match the workflow (LCFM-25).
 ## Module boundaries
 
 See [MODULES.md](./MODULES.md) for import aliases and dependency rules.
+
+## Shared contracts
+
+Import DTOs and role constants from `@/shared`:
+
+```ts
+import {
+  Roles,
+  type AuthenticateRequest,
+  type CatalogItemDto,
+  type UserDto,
+} from "@/shared";
+```
+
+Wire field names are camelCase to match ASP.NET Core `JsonSerializerDefaults.Web`.
+Vitest coverage lives in `src/shared/contracts/contracts.test.ts` and
+`src/shared/authorization/constants.test.ts`.
