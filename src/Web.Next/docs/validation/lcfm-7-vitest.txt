@@ -1,0 +1,20 @@
+
+> web-next@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /workspace/src/Web.Next
+
+ ✓ src/shared/module-boundaries.test.ts (1 test) 2ms
+ ✓ src/domain/commerce/types.test.ts (2 tests) 3ms
+ ✓ src/shared/package-scripts.test.ts (1 test) 2ms
+ ✓ src/shared/scaffold.test.ts (1 test) 2ms
+ ✓ src/data/sql/commerce-schema.test.ts (4 tests) 4ms
+ ✓ src/data/repositories/sql-commerce.integration.test.ts (2 tests | 1 skipped) 1ms
+ ✓ src/data/repositories/sql-commerce-repositories.test.ts (7 tests) 8ms
+
+ Test Files  7 passed (7)
+      Tests  17 passed | 1 skipped (18)
+   Start at  16:50:46
+   Duration  418ms (transform 229ms, setup 0ms, collect 721ms, tests 21ms, environment 1ms, prepare 435ms)
+

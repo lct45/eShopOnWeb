@@ -1,22 +1,23 @@
 # Next.js app for eShopOnWeb (LCFM migration)
 
 App Router foundation (LCFM-2) plus shared API contracts and authorization
-constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
+constants (LCFM-3), and basket/order SQL Server models and repositories (LCFM-7).
 
 ## Scripts
 
 | Script                            | Purpose                                                     |
 | --------------------------------- | ----------------------------------------------------------- |
-| `npm run dev`                     | Local development server                                    |
-| `npm run build`                   | Production build check                                      |
-| `npm run start`                   | Serve the production build                                  |
-| `npm run lint`                    | ESLint                                                      |
-| `npm run format` / `format:check` | Prettier write / check                                      |
-| `npm run typecheck`               | Strict TypeScript (`tsc --noEmit`)                          |
-| `npm run test`                    | Vitest unit tests                                           |
+| `npm run dev`                     | Local development server                                        |
+| `npm run build`                   | Production build check                                          |
+| `npm run start`                   | Serve the production build                                      |
+| `npm run lint`                    | ESLint                                                          |
+| `npm run format` / `format:check` | Prettier write / check                                          |
+| `npm run typecheck`               | Strict TypeScript (`tsc --noEmit`)                              |
+| `npm run test`                    | Vitest unit + commerce repository tests                         |
 | `npm run test:ci`                 | Vitest with JUnit + coverage (CI artifact producers)        |
-| `npm run verify`                  | typecheck + lint + format + test + build                    |
+| `npm run verify`                  | typecheck + lint + format + test + build                        |
 | `npm run verify:ci`               | Full CI mirror: format + lint + typecheck + test:ci + build |
+| `npm run test:e2e:commerce`       | Basket/order repository walkthrough (memory or live SQL Server) |
 
 Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
