@@ -187,7 +187,7 @@ ALTER SEQUENCE dbo.catalog_hilo RESTART WITH ${values.catalog_hilo};
    PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount
  ) VALUES (
    @id, @userName, @normalizedUserName, @email, @normalizedEmail,
-   1, @passwordHash, @securityStamp, @concurrencyStamp,
+   0, @passwordHash, @securityStamp, @concurrencyStamp,
    0, 0, 1, 0
  );`,
       );
