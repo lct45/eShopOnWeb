@@ -4,4 +4,5 @@
  * Domain may depend on abstractions defined here; UI should not.
  */
 
-export {};
+export { getDatabaseEnv, getDatabaseHealthSummary } from "./env";
+export type { DatabaseEnv } from "./env";
