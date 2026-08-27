@@ -1,0 +1,91 @@
+name: Web.Next CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/Web.Next/**"
+      - ".github/workflows/web-next.yml"
+  pull_request:
+    paths:
+      - "src/Web.Next/**"
+      - ".github/workflows/web-next.yml"
+      - ".github/dependabot.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: src/Web.Next
+
+jobs:
+  quality:
+    name: Format, lint, typecheck, test, build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: src/Web.Next/.nvmrc
+          cache: npm
+          cache-dependency-path: src/Web.Next/package-lock.json
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
+      - name: Install dependencies (lockfile only)
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests with coverage
+        run: npm run test:ci
+
+      - name: Production build
+        run: npm run build
+
+      - name: Upload Vitest JUnit report
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-next-vitest-junit
+          path: src/Web.Next/reports/junit.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload coverage report
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-next-coverage
+          path: |
+            src/Web.Next/coverage/lcov.info
+            src/Web.Next/coverage/coverage-summary.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Publish coverage summary
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-next-coverage-html
+          path: src/Web.Next/coverage
+          if-no-files-found: warn
+          retention-days: 7

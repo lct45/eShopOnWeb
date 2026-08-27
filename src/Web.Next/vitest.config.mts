@@ -8,6 +8,13 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     globals: false,
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov", "json-summary", "html"],
+      reportsDirectory: "./coverage",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    },
   },
   resolve: {
     alias: {

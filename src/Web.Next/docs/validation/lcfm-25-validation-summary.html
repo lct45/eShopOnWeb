@@ -1,0 +1,63 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>LCFM-25 CI Validation</title>
+<style>
+body{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#14120b;color:#edecec;padding:32px;}
+h1{color:#f54e00;font-size:28px;margin:0 0 8px}
+h2{margin-top:28px;font-size:16px;color:#edecec;opacity:.8}
+.card{background:#1b1913;border:1px solid #26241e;padding:16px 20px;margin-top:12px;border-radius:8px;white-space:pre-wrap;line-height:1.45;font-size:13px}
+.ok{color:#6dd58c}
+</style></head><body>
+<h1>LCFM-25 Web.Next CI validation</h1>
+<p>Local mirror of GitHub Actions quality gates</p>
+<h2>Gate pass/fail summary</h2>
+<div class="card ok">TEST FAIL EXIT: 1
+
+>>> INTENTIONAL FAIL: build
+
+> web-next@0.1.0 build
+> next build
+
+▲ Next.js 16.3.0 (Turbopack)
+✓ Running next.config.ts took 17ms
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 error:
+./src/app/page.tsx:23:1
+Error: Module not found: Can't resolve '@/does-not-exist'
+  [90m21 |[0m   );
+  [90m22 |[0m }
+[31m[1m>[0m [90m23 |[0m [36mimport[0m [32m"@/does-not-exist"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m24 |[0m
+
+Import map: aliased to relative './src/does-not-exist' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./src/app/page.tsx:23:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+BUILD FAIL EXIT: 1
+
+>>> Summary
+format=1 lint=1 typecheck=2 test=1 build=1
+ALL INTENTIONAL FAILS NON-ZERO: yes
+
+>>> Artifacts after clean re-run
+-rw-r--r-- 1 ubuntu ubuntu 2218 Aug 17 16:44 coverage/coverage-summary.json
+-rw-r--r-- 1 ubuntu ubuntu 1226 Aug 17 16:44 coverage/lcov.info
+-rw-r--r-- 1 ubuntu ubuntu 2457 Aug 17 16:44 reports/junit.xml</div>
+<h2>Coverage summary JSON</h2>
+<div class="card">{"total": {"lines":{"total":41,"covered":9,"skipped":0,"pct":21.95},"statements":{"total":41,"covered":9,"skipped":0,"pct":21.95},"functions":{"total":7,"covered":6,"skipped":0,"pct":85.71},"branches":{"total":7,"covered":6,"skipped":0,"pct":85.71},"branchesTrue":{"total":0,"covered":0,"skipped":0,"pct":100}}
+,"/workspace/src/Web.Next/src/app/layout.tsx": {"lines":{"total":14,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":1,"skipped":0,"pct":100},"statements":{"total":14,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":1,"skipped":0,"pct":100}}
+,"/workspace/src/Web.Next/src/app/page.tsx": {"lines":{"total":17,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":1,"skipped":0,"pct":100},"statements":{"total":17,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":1,"skipped":0,"pct":100}}
+,"/workspace/src/Web.Next/src/auth/index.ts": {"lines":{"total":0,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":1,"skipped":0,"pct":0},"statements":{"total":0,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":1,"skipped":0,"pct":0}}
+,"/workspace/src/Web.Next/src/data/index.ts": {"lines":{"total":0,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":1,"skipped":0,"pct":0},"statements":{"total":0,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":1,"skipped":0,"pct":0}}
+,"/workspace/src/Web.Next/src/domain/index.ts": {"lines":{"total":0,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":1,"skipped":0,"pct":0},"statements":{"total":0,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":1,"skipped":0,"pct":0}}
+,"/workspace/src/Web.Next/src/shared/index.ts": {"lines":{"total":1,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":0,"skipped":0,"pct":0},"statements":{"total":1,"covered":0,"skipped":0,"pct":0},"branches":{"total":1,"covered":0,"skipped":0,"pct":0}}
+,"/workspace/src/Web.Next/src/shared/scaffold.ts": {"lines":{"total":9,"covered":9,"skipped":0,"pct":100},"functions":{"total":1,"covered":1,"skipped":0,"pct":100},"statements":{"total":9,"covered":9,"skipped":0,"pct":100},"branches":{"total":1,"covered":1,"skipped":0,"pct":100}}
+}
+</div>
+</body></html>
