@@ -44,6 +44,8 @@ describe("Web.Next CI contract (LCFM-25)", () => {
     expect(workflow).toContain("web-next-vitest-junit");
     expect(workflow).toContain("web-next-coverage");
     expect(workflow).toContain("reports/junit.xml");
+    // LCFM-36: required checks must not be path-skipped on PRs.
+    expect(workflow).not.toMatch(/pull_request:\n(?: {4}.+\n)*? {4}paths:/m);
   });
 
   it("keeps the .NET CI workflow alongside Web.Next CI", () => {

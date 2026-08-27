@@ -6,6 +6,42 @@ Migration plan and ticket map: [dotnet-to-nextjs-migration.md](./dotnet-to-nextj
 
 Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests fail.
 
+## Required merge checks on `main` (LCFM-36)
+
+These GitHub status-check **contexts** must pass before a PR can merge to `main`. Source of truth for the ruleset payload: [`.github/rulesets/main-merge-gates.json`](../.github/rulesets/main-merge-gates.json). Apply or refresh with [`scripts/apply-main-merge-gates.sh`](../scripts/apply-main-merge-gates.sh) (repo **admin** token).
+
+| Required check context | Source | When |
+| --- | --- | --- |
+| `build` | `.github/workflows/dotnetcore.yml` (.NET job) | Required until cutover ([LCFM-30](https://fe-anysphere-demo.atlassian.net/browse/LCFM-30)) |
+| `Format, lint, typecheck, test, build` | `.github/workflows/web-next.yml` (Web.Next quality job) | Required now ([LCFM-25](https://fe-anysphere-demo.atlassian.net/browse/LCFM-25)) — format, lint, typecheck, Vitest, `next build` |
+| `Cursor Bugbot` | Cursor Bugbot GitHub check | Required now ([LCFM-35](https://fe-anysphere-demo.atlassian.net/browse/LCFM-35)) |
+
+**Not required yet**
+
+| Check | Reason |
+| --- | --- |
+| Next.js Playwright / E2E parity job | Add as a required context after [LCFM-28](https://fe-anysphere-demo.atlassian.net/browse/LCFM-28) ships the workflow; then update the ruleset JSON and re-run the apply script |
+
+### Why Web.Next CI has no path filters
+
+Required checks that are skipped (for example by `paths:` filters) never report a status, so GitHub blocks the PR forever. `web-next.yml` therefore runs on every pull request and every push to `main`.
+
+### Cutover update checklist (LCFM-30)
+
+When removing the .NET solution:
+
+1. Delete or stop requiring `.github/workflows/dotnetcore.yml`.
+2. Remove the `build` context from `.github/rulesets/main-merge-gates.json`.
+3. Keep `Format, lint, typecheck, test, build` and `Cursor Bugbot`.
+4. If Playwright parity CI exists, append that job’s context name to `required_status_checks`.
+5. Re-run `scripts/apply-main-merge-gates.sh` and confirm Settings → Rules on the repo.
+
+### Enforcement acceptance (what “required” means)
+
+- A PR whose lint, typecheck, unit tests, or production build fails cannot merge to `main`.
+- A PR with no successful `Cursor Bugbot` check cannot merge to `main`.
+- .NET `build` remains required until the cutover checklist above is executed.
+
 ## How to use this on a PR
 
 1. Link the `LCFM-*` ticket.
@@ -15,15 +51,14 @@ Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests
 
 ## Gate 0 — Quality tooling
 
-**Tickets:** [LCFM-34](https://fe-anysphere-demo.atlassian.net/browse/LCFM-34), [LCFM-35](https://fe-anysphere-demo.atlassian.net/browse/LCFM-35), [LCFM-37](https://fe-anysphere-demo.atlassian.net/browse/LCFM-37)
+**Tickets:** [LCFM-34](https://fe-anysphere-demo.atlassian.net/browse/LCFM-34), [LCFM-35](https://fe-anysphere-demo.atlassian.net/browse/LCFM-35), [LCFM-36](https://fe-anysphere-demo.atlassian.net/browse/LCFM-36), [LCFM-37](https://fe-anysphere-demo.atlassian.net/browse/LCFM-37)
 
 **Pass when:**
 
 - Root and nested `.cursor/BUGBOT.md` files exist
 - `.github/pull_request_template.md` pre-fills on new PRs
 - This document is linked from the template and Bugbot rules
-
-**Follow-up:** [LCFM-36](https://fe-anysphere-demo.atlassian.net/browse/LCFM-36) makes Bugbot plus CI required on `main`.
+- Required merge checks for `main` are listed above and encoded in `.github/rulesets/main-merge-gates.json`
 
 ## Gate 1 — Foundation
 
@@ -90,7 +125,7 @@ Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests
 
 **Pass when:**
 
-- Required CI checks block merge (LCFM-36)
+- Required CI checks block merge (LCFM-36): `build`, `Format, lint, typecheck, test, build`, and `Cursor Bugbot` are documented and applied via the main ruleset (see [Required merge checks on main](#required-merge-checks-on-main-lcfm-36))
 - Health: liveness stays up if SQL is down; readiness fails
 - Azure non-prod deployment boots against existing SQL Server
 - Performance job has a recorded .NET baseline and Next.js thresholds (LCFM-40)
@@ -121,7 +156,7 @@ Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests
 
 | Tickets | Gate |
 | --- | --- |
-| LCFM-34, LCFM-35, LCFM-37 | 0 Quality tooling |
+| LCFM-34, LCFM-35, LCFM-36, LCFM-37 | 0 Quality tooling / merge gates |
 | LCFM-2–4, LCFM-25, LCFM-26 | 1 Foundation |
 | LCFM-5–10, LCFM-42, LCFM-43 | 2 Data and domain |
 | LCFM-11, LCFM-38 | 3 Auth |
@@ -139,3 +174,5 @@ Bugbot reviews diffs only. Required CI (LCFM-36) is what blocks merge when tests
 | Ticket linked, tests present in the diff, no secrets, no weakened auth | Bugbot (LCFM-35) |
 | Lint, typecheck, unit, integration, Playwright actually pass | CI (LCFM-25, LCFM-36) |
 | Stage evidence is sufficient to close the ticket | Reviewer using this doc |
+
+See also [Required merge checks on `main`](#required-merge-checks-on-main-lcfm-36) for the exact GitHub check contexts that block merge.

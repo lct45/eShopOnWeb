@@ -1,0 +1,6 @@
+Looking for existing ruleset named: main merge gates (LCFM-36)
+Creating ruleset
+{"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/repos/rules#create-a-repository-ruleset","status":"403"}gh: Resource not accessible by integration (HTTP 403)
+error: failed to create ruleset (need repo admin permissions).
+Ask a repo admin to run: bash scripts/apply-main-merge-gates.sh
+APPLY_EXIT:1

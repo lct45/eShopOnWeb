@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LCFM-36 merge gates validation</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f4;
+        --fg: #26251e;
+        --accent: #f54e00;
+        --card: #f2f1ed;
+      }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #fff7f2, var(--bg) 45%);
+        color: var(--fg);
+        padding: 2.5rem;
+        line-height: 1.45;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      .accent {
+        color: var(--accent);
+      }
+      table {
+        border-collapse: collapse;
+        width: min(920px, 100%);
+        background: var(--card);
+        margin: 1.25rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #d9d6cf;
+        padding: 0.65rem 0.75rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #ebeae5;
+      }
+      code {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.92em;
+      }
+      .ok {
+        color: #0b6b2f;
+        font-weight: 600;
+      }
+      .warn {
+        color: #9a3412;
+        font-weight: 600;
+      }
+      ul {
+        max-width: 920px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>LCFM-36 — Required merge checks on <span class="accent">main</span></h1>
+    <p>
+      Validation summary for branch ruleset documentation, Web.Next CI always-on
+      reporting, and contract tests.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Required check context</th>
+          <th>Source</th>
+          <th>Status in this PR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>build</code></td>
+          <td><code>.github/workflows/dotnetcore.yml</code></td>
+          <td class="ok">Documented + kept until LCFM-30</td>
+        </tr>
+        <tr>
+          <td><code>Format, lint, typecheck, test, build</code></td>
+          <td><code>.github/workflows/web-next.yml</code></td>
+          <td class="ok">Always runs on PRs (path filters removed)</td>
+        </tr>
+        <tr>
+          <td><code>Cursor Bugbot</code></td>
+          <td>Cursor Bugbot GitHub check</td>
+          <td class="ok">Documented as required</td>
+        </tr>
+        <tr>
+          <td>Playwright E2E parity</td>
+          <td>Future LCFM-28 workflow</td>
+          <td class="warn">Not required yet — cutover follow-up</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Local validation run</h2>
+    <ul>
+      <li><code>npm run verify:ci</code> — pass (format, lint, typecheck, Vitest, next build)</li>
+      <li><code>merge-gates-contract.test.ts</code> — 5 tests covering ruleset, docs, workflows</li>
+      <li>
+        <code>scripts/apply-main-merge-gates.sh</code> — exits 1 without repo admin
+        (expected in agent token); admin must apply once
+      </li>
+    </ul>
+
+    <h2>Artifacts</h2>
+    <ul>
+      <li>Ruleset: <code>.github/rulesets/main-merge-gates.json</code></li>
+      <li>Docs: <code>docs/migration-stage-gates.md</code> § Required merge checks</li>
+      <li>Apply: <code>scripts/apply-main-merge-gates.sh</code></li>
+    </ul>
+  </body>
+</html>
