@@ -1,7 +1,7 @@
 # Next.js app for eShopOnWeb (LCFM migration)
 
 App Router foundation (LCFM-2) plus shared API contracts and authorization
-constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
+constants (LCFM-3), and SQL Server catalog models/repositories (LCFM-5).
 
 ## Scripts
 
@@ -17,6 +17,7 @@ constants (LCFM-3). No storefront UI, auth flows, or database integration yet.
 | `npm run test:ci`                 | Vitest with JUnit + coverage (CI artifact producers)        |
 | `npm run verify`                  | typecheck + lint + format + test + build                    |
 | `npm run verify:ci`               | Full CI mirror: format + lint + typecheck + test:ci + build |
+| `npm run test:e2e:catalog`        | Catalog repository e2e walkthrough       |
 
 Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
@@ -24,6 +25,13 @@ Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
 See [docs/ci.md](./docs/ci.md) for GitHub Actions gates, lockfile rules, artifacts,
 and local commands that match the workflow (LCFM-25).
+
+## Catalog persistence (LCFM-5)
+
+- Domain ports: `@/domain/catalog` (`CatalogItem`, `CatalogBrand`, `CatalogType`)
+- SQL adapters: `@/data/repositories/sql-catalog-repositories`
+- Connection env (first match wins): `CATALOG_SQL_CONNECTION_STRING`, `ESHOP_CATALOG_CONNECTION_STRING`, `ESHOP_CATALOG_CONNECTION`, `CatalogConnection`
+- Live SQL Server Vitest suite runs when a connection string is set; otherwise it is skipped and MemorySqlExecutor covers filter/page/count/CRUD.
 
 ## Module boundaries
 
