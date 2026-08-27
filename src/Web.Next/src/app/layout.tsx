@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import { AppShell } from "@/shared/ui";
+import { PAGE_TITLE_SUFFIX, PAGE_TITLE_TEMPLATE } from "@/shared/ui/page-title";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "eShopOnWeb Next.js",
-  description: "Next.js foundation for the eShopOnWeb migration",
+  title: {
+    default: PAGE_TITLE_SUFFIX,
+    template: PAGE_TITLE_TEMPLATE,
+  },
+  description: "eShopOnWeb storefront migrated to Next.js",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -13,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
