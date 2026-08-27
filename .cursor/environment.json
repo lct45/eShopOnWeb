@@ -1,0 +1,20 @@
+{
+  "name": "eShopOnWeb",
+  "install": "bash .cursor/setup/install.sh",
+  "terminals": [
+    {
+      "name": "PublicApi",
+      "command": "bash .cursor/setup/run-publicapi.sh",
+      "description": "eShopOnWeb PublicApi (FastEndpoints + Swagger) on http://localhost:5099, using the EF Core in-memory database."
+    },
+    {
+      "name": "Web",
+      "command": "bash .cursor/setup/run-web.sh",
+      "description": "eShopOnWeb storefront + Blazor admin on http://localhost:5001, using the EF Core in-memory database."
+    }
+  ],
+  "ports": [
+    { "name": "Web storefront", "port": 5001 },
+    { "name": "PublicApi", "port": 5099 }
+  ]
+}
