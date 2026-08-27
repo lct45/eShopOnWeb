@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "src/Web.Next/**"
-      - ".github/workflows/web-next.yml"
   pull_request:
-    paths:
-      - "src/Web.Next/**"
-      - ".github/workflows/web-next.yml"
-      - ".github/dependabot.yml"
   workflow_dispatch:
+
+# Path filters intentionally omitted for pull_request and main pushes.
+# LCFM-36 makes this job a required status check on `main`. Required checks
+# that are skipped (path-filtered) leave PRs permanently unmergeable.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}

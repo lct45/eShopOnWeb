@@ -1,0 +1,59 @@
+{
+  "name": "main merge gates (LCFM-36)",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [],
+  "conditions": {
+    "ref_name": {
+      "include": ["refs/heads/main"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "build",
+            "integration_id": null
+          },
+          {
+            "context": "Format, lint, typecheck, test, build",
+            "integration_id": null
+          },
+          {
+            "context": "Cursor Bugbot",
+            "integration_id": null
+          }
+        ]
+      }
+    }
+  ],
+  "_lcfm36_notes": {
+    "description": "Repo-as-code definition for GitHub branch rulesets. Apply with scripts/apply-main-merge-gates.sh (requires admin:repo).",
+    "current_required_checks": [
+      "build — .NET workflow job in .github/workflows/dotnetcore.yml (keep until LCFM-30 cutover)",
+      "Format, lint, typecheck, test, build — Web.Next CI job in .github/workflows/web-next.yml (LCFM-25)",
+      "Cursor Bugbot — Cursor Bugbot GitHub check (LCFM-35)"
+    ],
+    "cutover_LCFM_30": [
+      "Remove the `build` (.NET) required check after .NET CI is deleted",
+      "Keep Web.Next quality job and Cursor Bugbot",
+      "Add the Playwright parity E2E job context once LCFM-28 lands (see docs/migration-stage-gates.md)"
+    ],
+    "playwright_follow_up": "When the Next.js Playwright workflow exists, append its job name/context to required_status_checks and re-run the apply script."
+  }
+}
