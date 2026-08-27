@@ -21,11 +21,12 @@ UI or auth flows yet.
 | `npm run db:seed`                 | Idempotent SQL Server seed               |
 | `npm run db:reset`                | Wipe seeded tables, then seed            |
 
+Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
+
 ## CI
 
 See [docs/ci.md](./docs/ci.md) for GitHub Actions gates, lockfile rules, artifacts,
 and local commands that match the workflow (LCFM-25).
-Runtime pin: Node 22 (see `.nvmrc`). Package manager pin: `npm@10.9.7`.
 
 ## Shared seed (LCFM-42)
 

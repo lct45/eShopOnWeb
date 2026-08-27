@@ -22,5 +22,6 @@ describe("package scripts", () => {
     );
     expect(packageJson.scripts["db:reset"]).toBe(
       "tsx src/data/seed/cli.ts reset",
+    );
   });
 });
