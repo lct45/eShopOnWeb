@@ -8,9 +8,9 @@ into top-level modules under `src/`.
 | Module   | Path         | Responsibility                                                                                                               |
 | -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | `app`    | `src/app`    | Next.js App Router routes, layouts, and UI entry points                                                                      |
-| `domain` | `src/domain` | Pure business rules (catalog, basket, order)                                                                                 |
+| `domain` | `src/domain` | Pure business rules (catalog, basket, order, identity ports)                                                                 |
 | `data`   | `src/data`   | Persistence adapters and repository implementations                                                                          |
-| `auth`   | `src/auth`   | Identity, sessions, and authorization helpers                                                                                |
+| `auth`   | `src/auth`   | Identity password compatibility, sessions, and authorization helpers                                                         |
 | `shared` | `src/shared` | Cross-cutting types and utilities with no feature logic (includes `contracts/` API DTOs and `authorization/` role constants) |
 
 ## Import aliases
@@ -44,7 +44,7 @@ Disallowed:
 
 - `domain` must not import `app`, `auth`, or `data` implementations
 - `shared` must not import `app`, `domain`, `data`, or `auth`
-- No database clients or storefront feature code in this scaffold ticket
+- Next.js request handlers must not import `mssql` directly — use `@/data` repositories
 
 ## Shared contracts (LCFM-3)
 
@@ -53,5 +53,10 @@ constants under `src/shared/authorization/`. They mirror PublicApi /
 BlazorShared wire shapes (camelCase JSON field names) and must not import React,
 Next.js, or database packages.
 
-Later tickets fill remaining modules; foundation tickets establish contracts and
-the executable toolchain.
+## Identity persistence (LCFM-6)
+
+- Domain ports: `src/domain/identity`
+- SQL implementations: `src/data/repositories/sql-identity-repositories.ts`
+- ASP.NET Identity V3 hasher: `src/auth/aspnet-identity-password.ts` (see
+  `docs/identity-password-compatibility.md`)
+- Demo seed fixtures: `src/shared/fixtures/identity.ts`

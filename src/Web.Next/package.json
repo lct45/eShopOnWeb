@@ -18,14 +18,17 @@
     "test:ci": "vitest run --coverage --reporter=default --reporter=junit --outputFile.junit=reports/junit.xml",
     "test:watch": "vitest",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build",
-    "verify:ci": "npm run format:check && npm run lint && npm run typecheck && npm run test:ci && npm run build"
+    "verify:ci": "npm run format:check && npm run lint && npm run typecheck && npm run test:ci && npm run build",
+    "test:e2e:identity": "tsx src/data/scripts/identity-e2e.ts"
   },
   "dependencies": {
+    "mssql": "^12.7.0",
     "next": "16.3.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@types/mssql": "^12.3.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -34,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "prettier": "^3.6.2",
+    "tsx": "^4.23.12",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
