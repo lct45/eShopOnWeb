@@ -1,8 +1,12 @@
-# Web.Next CI quality gates (LCFM-25)
+# Web.Next CI quality gates (LCFM-25 / LCFM-36)
 
 GitHub Actions workflow: [`.github/workflows/web-next.yml`](../../../.github/workflows/web-next.yml).
 
 The existing .NET workflow (`.github/workflows/dotnetcore.yml`) stays enabled until cutover (LCFM-30).
+
+The Web.Next quality job context (`Format, lint, typecheck, test, build`) is a **required** status check on `main` (LCFM-36), alongside .NET `build` and `Cursor Bugbot`. See [migration stage gates — required merge checks](../../../docs/migration-stage-gates.md#required-merge-checks-on-main-lcfm-36) and [`.github/rulesets/main-merge-gates.json`](../../../.github/rulesets/main-merge-gates.json).
+
+Because the check is required, this workflow runs on **every** pull request and every push to `main` (no path filters).
 
 ## Local commands (same gates as CI)
 

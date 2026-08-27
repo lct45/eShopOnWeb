@@ -1,0 +1,93 @@
+
+> web-next@0.1.0 verify:ci
+> npm run format:check && npm run lint && npm run typecheck && npm run test:ci && npm run build
+
+
+> web-next@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> web-next@0.1.0 lint
+> eslint . --max-warnings 0
+
+
+> web-next@0.1.0 typecheck
+> tsc --noEmit
+
+
+> web-next@0.1.0 test:ci
+> vitest run --coverage --reporter=default --reporter=junit --outputFile.junit=reports/junit.xml
+
+
+ RUN  v3.2.7 /workspace/src/Web.Next
+      Coverage enabled with v8
+
+ ✓ src/shared/package-scripts.test.ts (1 test) 2ms
+ ✓ src/shared/ci-contract.test.ts (6 tests) 3ms
+ ✓ src/shared/merge-gates-contract.test.ts (5 tests) 4ms
+ ✓ src/shared/module-boundaries.test.ts (1 test) 2ms
+ ✓ src/shared/scaffold.test.ts (1 test) 2ms
+ ✓ src/shared/authorization/constants.test.ts (2 tests) 2ms
+ ✓ src/shared/contracts/contracts.test.ts (7 tests) 5ms
+
+ Test Files  7 passed (7)
+      Tests  23 passed (23)
+   Start at  16:11:44
+   Duration  319ms (transform 162ms, setup 0ms, collect 248ms, tests 21ms, environment 1ms, prepare 538ms)
+
+JUNIT report written to /workspace/src/Web.Next/reports/junit.xml
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   32.65 |     92.3 |    92.3 |   32.65 |                   
+ app               |       0 |      100 |     100 |       0 |                   
+  layout.tsx       |       0 |      100 |     100 |       0 | 2-19              
+  page.tsx         |       0 |      100 |     100 |       0 | 2-22              
+ auth              |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ data              |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ domain            |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ shared            |   81.81 |       50 |      50 |   81.81 |                   
+  index.ts         |       0 |        0 |       0 |       0 | 1-2               
+  scaffold.ts      |     100 |      100 |     100 |     100 |                   
+ .../authorization |     100 |      100 |     100 |     100 |                   
+  constants.ts     |     100 |      100 |     100 |     100 |                   
+ shared/contracts  |       0 |        0 |       0 |       0 |                   
+  auth.ts          |       0 |        0 |       0 |       0 |                   
+  catalog.ts       |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...membership.ts |       0 |        0 |       0 |       0 |                   
+  role.ts          |       0 |        0 |       0 |       0 |                   
+  user.ts          |       0 |        0 |       0 |       0 |                   
+-------------------|---------|----------|---------|---------|-------------------
+
+> web-next@0.1.0 build
+> next build
+
+▲ Next.js 16.3.0 (Turbopack)
+✓ Running next.config.ts took 17ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 89ms
+  Running TypeScript ...
+  Finished TypeScript in 926ms ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/4) ...
+  Generating static pages using 5 workers (1/4) 
+  Generating static pages using 5 workers (2/4) 
+  Generating static pages using 5 workers (3/4) 
+✓ Generating static pages using 5 workers (4/4) in 332ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+
+○  (Static)  prerendered as static content
+

@@ -111,7 +111,7 @@ These were added so each stage can be tested instead of dumping all validation i
 | --- | --- | --- |
 | [LCFM-34](https://fe-anysphere-demo.atlassian.net/browse/LCFM-34) | PR template | Implemented in the quality-gates PR |
 | [LCFM-35](https://fe-anysphere-demo.atlassian.net/browse/LCFM-35) | Bugbot review rules | Implemented in the quality-gates PR |
-| [LCFM-36](https://fe-anysphere-demo.atlassian.net/browse/LCFM-36) | Require CI and Bugbot for merge | GitHub branch protection; wait for LCFM-25 |
+| [LCFM-36](https://fe-anysphere-demo.atlassian.net/browse/LCFM-36) | Require CI and Bugbot for merge | Ruleset in `.github/rulesets/main-merge-gates.json`; apply via `scripts/apply-main-merge-gates.sh` |
 | [LCFM-37](https://fe-anysphere-demo.atlassian.net/browse/LCFM-37) | Stage exit gates doc | Implemented in the quality-gates PR |
 | [LCFM-38](https://fe-anysphere-demo.atlassian.net/browse/LCFM-38) | Auth compatibility and security tests | |
 | [LCFM-39](https://fe-anysphere-demo.atlassian.net/browse/LCFM-39) | API differential harness | Blocked by LCFM-41, LCFM-21, LCFM-22, LCFM-42 |
