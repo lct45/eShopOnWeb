@@ -384,21 +384,21 @@ export class SqlCheckoutUnitOfWork implements CheckoutUnitOfWork {
       if (!basket) {
         throw new Error(`Basket ${input.basketId} was not found`);
       }
-      if (basket.items.length === 0 && !input.orderItems?.length) {
+
+      const orderItems: NewOrderItem[] = input.orderItems?.length
+        ? input.orderItems
+        : basket.items.map((item) => ({
+            unitPrice: item.unitPrice,
+            units: item.quantity,
+            itemOrdered: {
+              catalogItemId: item.catalogItemId,
+              productName: `Catalog item ${item.catalogItemId}`,
+              pictureUri: "",
+            },
+          }));
+      if (orderItems.length === 0) {
         throw new Error("Basket must contain items for checkout");
       }
-
-      const orderItems: NewOrderItem[] =
-        input.orderItems ??
-        basket.items.map((item) => ({
-          unitPrice: item.unitPrice,
-          units: item.quantity,
-          itemOrdered: {
-            catalogItemId: item.catalogItemId,
-            productName: `Catalog item ${item.catalogItemId}`,
-            pictureUri: "",
-          },
-        }));
 
       const order = await orders.create({
         buyerId: basket.buyerId,

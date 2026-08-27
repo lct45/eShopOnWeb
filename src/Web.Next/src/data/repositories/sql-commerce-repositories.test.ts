@@ -124,6 +124,24 @@ describe("SQL commerce repositories (memory SQL Server semantics)", () => {
     });
   });
 
+  it("falls back to basket lines when checkout orderItems is an empty array", async () => {
+    const basket = await repos.baskets.create({
+      buyerId: "empty-override-user",
+      items: [{ catalogItemId: 2, quantity: 3, unitPrice: 8.5 }],
+    });
+
+    const order = await repos.checkout.createOrderAndClearBasket({
+      basketId: basket.id,
+      shipToAddress: address,
+      orderItems: [],
+    });
+
+    expect(order.orderItems).toHaveLength(1);
+    expect(order.orderItems[0]?.units).toBe(3);
+    expect(order.orderItems[0]?.itemOrdered.catalogItemId).toBe(2);
+    expect(await repos.baskets.getById(basket.id)).toBeNull();
+  });
+
   it("checks out inside a transaction: order persisted and basket cleared", async () => {
     const basket = await repos.baskets.create({
       buyerId: "checkout-user",
